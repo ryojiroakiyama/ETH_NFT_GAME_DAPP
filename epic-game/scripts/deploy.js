@@ -3,10 +3,11 @@ const main = async () => {
 
   const gameContract = await gameContractFactory.deploy(
     ["ZORO", "NAMI", "USOPP"], // キャラクターの名前
+    // キャラクターの画像を IPFS の CID に変更
     [
-      "https://i.imgur.com/TZEhCTX.png", // キャラクターの画像
-      "https://i.imgur.com/WVAaMPA.png",
-      "https://i.imgur.com/pCMZeiM.png",
+      "QmXxR67ryeUw4xppPLbF2vJmfj1TCGgzANfiEZPzByM5CT",
+      "QmPHX1R4QgvGQrZym5dpWzzopavyNX2WZaVGYzVQQ2QcQL",
+      "QmUGjB7oQLBZdCDNJp9V9ZdjsBECjwcneRhE7bHcs9HwxG",
     ],
     [100, 200, 300],
     [100, 50, 25],

@@ -1,5 +1,5 @@
 // CONTRACT_ADDRESSに、コントラクトアドレスを保存します。
-const CONTRACT_ADDRESS = "0xc568A85C5426df491a386c9dd07E8d50132967ed";
+const CONTRACT_ADDRESS = "0x8F78d8F13e58324AC5A9F17bEEc54610Dc3FC2FE";
 
 //NFT キャラクター の属性をフォーマットしてオブジェクトとして返します。
 const transformCharacterData = (characterData) => {
