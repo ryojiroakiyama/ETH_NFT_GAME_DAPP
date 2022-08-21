@@ -6,6 +6,7 @@ import myEpicGame from "./utils/MyEpicGame.json";
 import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, transformCharacterData } from "./constants";
 import Arena from "./Components/Arena";
+import LoadingIndicator from "./Components/LoadingIndicator";
 
 // Constantsを宣言する: constとは値書き換えを禁止した変数を宣言する方法です。
 const TWITTER_HANDLE = "あなたのTwitterハンドル";
@@ -15,6 +16,8 @@ const App = () => {
   // ユーザーのウォレットアドレスを格納するために使用する状態変数を定義します。
   const [currentAccount, setCurrentAccount] = useState(null);
   const [characterNFT, setCharacterNFT] = useState(null);
+  // ロード状態を初期化します。
+  const [isLoading, setIsLoading] = useState(false);
 
   // ユーザーがRinkeby Network に接続されているか確認します。
   // '4' は Rinkeby のネットワークコードです。
@@ -30,28 +33,31 @@ const App = () => {
     }
   };
 
-  // ユーザーがMetaMaskを持っているか確認します。
+  // ユーザーが MetaMask を持っているか確認します。
   const checkIfWalletIsConnected = async () => {
     try {
       const { ethereum } = window;
       if (!ethereum) {
         console.log("Make sure you have MetaMask!");
+
+        // 次の行で return を使用するため、ここで isLoading を設定します。
+        setIsLoading(false);
         return;
       } else {
         console.log("We have the ethereum object", ethereum);
-        // accountsにWEBサイトを訪れたユーザーのウォレットアカウントを格納します。
+
+        // accounts にWEBサイトを訪れたユーザーのウォレットアカウントを格納します。
         // （複数持っている場合も加味、よって account's' と変数を定義している）
         const accounts = await ethereum.request({ method: "eth_accounts" });
+
         // もしアカウントが一つでも存在したら、以下を実行。
         if (accounts.length !== 0) {
-          // accountという変数にユーザーの1つ目（=Javascriptでいう0番目）のアドレスを格納
+          // account という変数にユーザーの1つ目（= Javascript でいう0番目）のアドレスを格納
           const account = accounts[0];
           console.log("Found an authorized account:", account);
-          // currentAccountにユーザーのアカウントアドレスを格納
-          setCurrentAccount(account);
 
-          // ユーザーが Rinkeby に接続されているか確認します。
-          checkNetwork();
+          // currentAccount にユーザーのアカウントアドレスを格納
+          setCurrentAccount(account);
         } else {
           console.log("No authorized account found");
         }
@@ -59,9 +65,16 @@ const App = () => {
     } catch (error) {
       console.log(error);
     }
+    //すべての関数ロジックの後に、state プロパティを解放します。
+    setIsLoading(false);
   };
   // レンダリングメソッド
   const renderContent = () => {
+    // アプリがロード中の場合は、LoadingIndicator をレンダリングします。
+    if (isLoading) {
+      return <LoadingIndicator />;
+    }
+
     // シナリオ1.
     // ユーザーがWEBアプリにログインしていない場合、WEBアプリ上に、"Connect Wallet to Get Started" ボタンを表示します。
     if (!currentAccount) {
@@ -120,6 +133,7 @@ const App = () => {
 
   // ページがロードされたときに useEffect()内の関数が呼び出されます。
   useEffect(() => {
+    setIsLoading(true);
     checkIfWalletIsConnected();
   }, []);
 
@@ -151,6 +165,8 @@ const App = () => {
       console.log("CurrentAccount:", currentAccount);
       fetchNFTMetadata();
     }
+    // ユーザーが保持している NFT の確認が完了したら、ロード状態を false に設定します。
+    setIsLoading(false);
   }, [currentAccount]);
 
   return (

@@ -3,6 +3,8 @@ import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, transformCharacterData } from "../../constants";
 import myEpicGame from "../../utils/MyEpicGame.json";
 import "./Arena.css";
+import LoadingIndicator from "../LoadingIndicator";
+
 // フロントエンドにNFTキャラクターを表示するため、characterNFTのメタデータを渡します。
 const Arena = ({ characterNFT, setCharacterNFT }) => {
   // コントラクトのデータを保有する状態変数を初期化します。
@@ -119,6 +121,13 @@ const Arena = ({ characterNFT, setCharacterNFT }) => {
               {`💥 Attack ${boss.name}`}
             </button>
           </div>
+          {/* Attack ボタンの下にローディングマークを追加します*/}
+          {attackState === "attacking" && (
+            <div className="loading-indicator">
+              <LoadingIndicator />
+              <p>Attacking ⚔️</p>
+            </div>
+          )}
         </div>
       )}
 
